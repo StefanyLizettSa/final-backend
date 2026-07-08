@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca - Inicio de Sesión</title>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 440px;
+            padding: 40px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            font-size: 48px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .logo-icon span { font-size: 40px; }
+        .logo h1 { font-size: 28px; color: #2d3748; font-weight: 700; }
+        .logo p { color: #718096; font-size: 14px; margin-top: 5px; }
+
+        /* Alertas */
+        .alert {
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .alert-error {
+            background: #fff5f5;
+            color: #e53e3e;
+            border: 1px solid #feb2b2;
+            display: block;
+        }
+
+        .alert-success {
+            background: #f0fff4;
+            color: #38a169;
+            border: 1px solid #9ae6b4;
+            display: block;
+        }
+
+        .alert-info {
+            background: #ebf8ff;
+            color: #2b6cb0;
+            border: 1px solid #90cdf4;
+            display: block;
+        }
+
+        /* Formulario */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 6px;
+        }
+
+        .form-group .input-icon {
+            position: relative;
+        }
+
+        .form-group .input-icon i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+            font-size: 18px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 14px 14px 46px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: #f7fafc;
+            color: #2d3748;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+
+        .form-group input:disabled {
+            background: #edf2f7;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .form-group input::placeholder {
+            color: #a0aec0;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #a0aec0;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px;
+        }
+
+        .password-toggle:hover { color: #667eea; }
+
+        /* Botones */
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-login {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-logout {
+            background: #e53e3e;
+            color: white;
+            box-shadow: 0 4px 15px rgba(229, 62, 62, 0.4);
+        }
+
+        .btn-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(229, 62, 62, 0.5);
+        }
+
+        .btn-switch {
+            background: #2b6cb0;
+            color: white;
+            box-shadow: 0 4px 15px rgba(43, 108, 176, 0.4);
+        }
+
+        .btn-switch:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(43, 108, 176, 0.5);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-group .btn {
+            flex: 1;
+            margin-top: 0;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s linear infinite;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .register-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .register-link a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .session-info {
+            background: #f0fff4;
+            border: 1px solid #9ae6b4;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .session-info .user-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .session-info .user-role {
+            font-size: 14px;
+            color: #38a169;
+            font-weight: 600;
+        }
+
+        .session-info .user-email {
+            font-size: 13px;
+            color: #718096;
+        }
+
+        .api-badge {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 12px;
+            color: #a0aec0;
+        }
+
+        .api-badge span {
+            background: #edf2f7;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .hidden { display: none; }
+
+        @media (max-width: 480px) {
+            .container { padding: 30px 20px; }
+            .logo h1 { font-size: 22px; }
+            .form-group input { padding: 12px 12px 12px 40px; font-size: 15px; }
+            .btn-group { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="app">
+        <!-- Logo -->
+        <div class="logo">
+            <div class="logo-icon"><span>📚</span></div>
+            <h1>Biblioteca</h1>
+            <p>Inicia sesión para acceder al catálogo</p>
+        </div>
+
+        <!-- Alertas -->
+        <div id="alert" class="alert" style="display: none;">
+            <span id="alertMessage"></span>
+        </div>
+
+        <div id="loginFormContainer">
+            <form id="loginForm" autocomplete="off">
+                <div class="form-group">
+                    <label for="email">Correo Electrónico</label>
+                    <div class="input-icon">
+                        <i>✉</i>
+                        <input type="email" id="email" placeholder="ejemplo@biblioteca.com" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <div class="input-icon">
+                        <i>🔒</i>
+                        <input type="password" id="password" placeholder="Mínimo 8 caracteres" required minlength="8">
+                        <button type="button" class="password-toggle" id="togglePassword">👁</button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-login" id="loginBtn">
+                    <span id="btnText">Iniciar Sesión</span>
+                </button>
+            </form>
+        </div>
+
+
+        <div id="sessionContainer" class="hidden">
+            <div class="session-info">
+                <div class="user-name" id="sessionUserName">Usuario</div>
+                <div class="user-role" id="sessionUserRole">ROL</div>
+                <div class="user-email" id="sessionUserEmail">email@ejemplo.com</div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-logout" id="logoutBtn">🚪 Cerrar Sesión</button>
+                <button class="btn btn-switch" id="switchAccountBtn">🔄 Cambiar Cuenta</button>
+            </div>
+        </div>
+
+        <!-- Enlace a registro -->
+        <div class="register-link">
+            ¿No tienes cuenta? <a href="#" id="registerLink">Regístrate aquí</a>
+        </div>
+
+        <div class="api-badge">
+            <span>API v1.0 · Spring Boot + JWT</span>
+        </div>
+    </div>
+
+
+    <script>
+        (function() {
+            'use strict';
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const loginForm = document.getElementById('loginForm');
+            const loginBtn = document.getElementById('loginBtn');
+            const btnText = document.getElementById('btnText');
+            const alertDiv = document.getElementById('alert');
+            const alertMessage = document.getElementById('alertMessage');
+            const togglePassword = document.getElementById('togglePassword');
+            const loginContainer = document.getElementById('loginFormContainer');
+            const sessionContainer = document.getElementById('sessionContainer');
+            const sessionUserName = document.getElementById('sessionUserName');
+            const sessionUserRole = document.getElementById('sessionUserRole');
+            const sessionUserEmail = document.getElementById('sessionUserEmail');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const switchAccountBtn = document.getElementById('switchAccountBtn');
+
+            const API_URL = 'http://localhost:8080/api/auth/login';
+
+
+            function showAlert(message, type = 'error') {
+                alertDiv.className = 'alert alert-' + type;
+                alertDiv.style.display = 'block';
+                alertMessage.textContent = message;
+            }
+
+            function hideAlert() {
+                alertDiv.style.display = 'none';
+            }
+
+            function setLoading(isLoading) {
+                if (isLoading) {
+                    loginBtn.disabled = true;
+                    btnText.innerHTML = '<span class="spinner"></span> Cargando...';
+                } else {
+                    loginBtn.disabled = false;
+                    btnText.textContent = 'Iniciar Sesión';
+                }
+            }
+
+            function isValidEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+
+
+            function showSession(userData) {
+                loginContainer.classList.add('hidden');
+                sessionContainer.classList.remove('hidden');
+                sessionUserName.textContent = userData.nombre || 'Usuario';
+                sessionUserRole.textContent = '🎭 ' + (userData.rol || 'SIN ROL');
+                sessionUserEmail.textContent = '📧 ' + (userData.email || '');
+                showAlert('✅ Sesión activa como: ' + userData.nombre, 'success');
+            }
+
+            function showLogin() {
+                loginContainer.classList.remove('hidden');
+                sessionContainer.classList.add('hidden');
+                hideAlert();
+                emailInput.value = '';
+                passwordInput.value = '';
+                loginBtn.disabled = false;
+                btnText.textContent = 'Iniciar Sesión';
+            }
+
+
+            function logout() {
+                localStorage.removeItem('usuario');
+                showLogin();
+                showAlert('🔓 Sesión cerrada correctamente', 'info');
+            }
+
+            function checkSession() {
+                const usuario = localStorage.getItem('usuario');
+
+                if (usuario) {
+                    try {
+                        const userData = JSON.parse(usuario);
+                        showSession(userData);
+                    } catch (e) {
+                        localStorage.clear();
+                        showLogin();
+                    }
+                } else {
+                    showLogin();
+                }
+            }
+
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.textContent = type === 'password' ? '👁' : '👁‍🗨';
+            });
+
+
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                hideAlert();
+
+                const email = emailInput.value.trim();
+                const password = passwordInput.value.trim();
+
+                if (!email) {
+                    showAlert('Por favor, ingresa tu correo electrónico.');
+                    emailInput.focus();
+                    return;
+                }
+                if (!isValidEmail(email)) {
+                    showAlert('Por favor, ingresa un correo electrónico válido.');
+                    emailInput.focus();
+                    return;
+                }
+                if (!password) {
+                    showAlert('Por favor, ingresa tu contraseña.');
+                    passwordInput.focus();
+                    return;
+                }
+                if (password.length < 8) {
+                    showAlert('La contraseña debe tener al menos 8 caracteres.');
+                    passwordInput.focus();
+                    return;
+                }
+
+                setLoading(true);
+
+                try {
+                    const response = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, password })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        // Guardar sesión (sin token)
+                        localStorage.setItem('usuario', JSON.stringify({
+                            email: data.email,
+                            nombre: data.nombre,
+                            rol: data.rol
+                        }));
+
+                        showSession({ email: data.email, nombre: data.nombre, rol: data.rol });
+                        showAlert('✅ ¡Inicio de sesión exitoso!', 'success');
+
+                    } else {
+                        const errorMsg = typeof data === 'string' ? data :
+                                        (data.mensaje || data.error || 'Credenciales incorrectas.');
+                        showAlert('❌ ' + errorMsg);
+                    }
+
+                } catch (error) {
+                    showAlert('❌ Error de conexión con el servidor.');
+                    console.error('Error:', error);
+                } finally {
+                    setLoading(false);
+                }
+            });
+
+
+            logoutBtn.addEventListener('click', logout);
+
+
+            switchAccountBtn.addEventListener('click', function() {
+                if (confirm('¿Seguro que quieres cambiar de cuenta? Se cerrará la sesión actual.')) {
+                    logout();
+                }
+            });
+
+            document.getElementById('registerLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('📝 Para registrarte, usa el endpoint:\nPOST /api/auth/registro\n\n' +
+                      'Ejemplo:\n{\n  "nombre": "Tu Nombre",\n  "email": "tu@email.com",\n' +
+                      '  "password": "tucontraseña",\n  "rol": "ESTUDIANTE"\n}');
+            });
+
+            checkSession();
+
+            console.log('📚 Biblioteca Login Page v2.0 (Sin JWT)');
+            console.log('🔗 API Endpoint:', API_URL);
+
+            window.logout = logout;
+
+        })();
+    </script>
+</body>
+</html>
